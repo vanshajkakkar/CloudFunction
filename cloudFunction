@@ -1,0 +1,35 @@
+int YELLOW_LED = D6;
+
+void flash_led(int d = 500)
+{
+    digitalWrite(YELLOW_LED, HIGH);
+    delay(d);
+    digitalWrite(YELLOW_LED, LOW);
+    delay(d);
+}
+
+void handler(const char *event, const char *data) 
+{
+    if (strcmp(data, "wave") == 0)
+    {
+        flash_led(2000);
+        flash_led(2000);
+        flash_led(2000);
+    } 
+    else if (strcmp(data, "pat") == 0)
+    {
+        flash_led(1000);
+        flash_led(1000);
+    }
+}
+
+void setup() {
+    pinMode(YELLOW_LED, OUTPUT);
+    
+    bool success = Particle.subscribe("Deakin_RIOT_SIT210_Photon_Buddy", handler);
+    
+    if (success)
+        Particle.publish("DEBUG", "Success");
+    else
+        Particle.publish("DEBUG", "Error");
+}
